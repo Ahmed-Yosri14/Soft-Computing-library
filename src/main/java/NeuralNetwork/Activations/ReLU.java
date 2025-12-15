@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-public class ReLU implements Activation {
+public class ReLU extends Activation {
     private boolean[] mask;
 
     @Override

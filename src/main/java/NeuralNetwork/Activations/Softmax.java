@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-public class Softmax implements Activation {
+public class Softmax extends Activation {
     private double[] output;
 
     @Override
@@ -8,9 +8,7 @@ public class Softmax implements Activation {
         output = new double[input.length];
 
         double max = input[0];
-        for (double v : input) {
-            if (v > max) max = v;
-        }
+        for (double v : input) max = Math.max(max, v);
 
         double sum = 0;
         for (int i = 0; i < input.length; i++) {
@@ -21,16 +19,11 @@ public class Softmax implements Activation {
         for (int i = 0; i < output.length; i++) {
             output[i] /= sum;
         }
-
         return output;
     }
 
     @Override
     public double[] backward(double[] gradOutput) {
-        return gradOutput;
-    }
-
-    public double[] getOutput() {
-        return output;
+        return gradOutput; // handled with CrossEntropy
     }
 }

@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-public class Sigmoid implements Activation {
+public class Sigmoid extends Activation {
     private double[] output;
 
     @Override

@@ -1,6 +1,16 @@
 package NeuralNetwork.Activations;
 
-public interface Activation {
-    double[] forward(double[] input);
-    double[] backward(double[] gradOutput);
+import NeuralNetwork.Layers.Layer;
+
+public abstract class Activation implements Layer {
+
+    @Override
+    public void update(double learningRate) {
+        // No parameters
+    }
+
+    @Override
+    public void zeroGrad() {
+        // Nothing to reset
+    }
 }

@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-public class Tanh implements Activation {
+public class Tanh extends Activation {
     private double[] output;
 
     @Override

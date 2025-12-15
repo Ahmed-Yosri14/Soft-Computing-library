@@ -1,18 +1,23 @@
 package NeuralNetwork.Layers;
 
-
 import NeuralNetwork.init.Initializer;
 
 public class Dense implements Layer {
+
     private double[][] weights;
     private double[] bias;
+
     private double[][] gradW;
     private double[] gradB;
+
     private double[] input;
 
     public Dense(int inputSize, int outputSize, Initializer initializer) {
-        this.weights = initializer.initialize(inputSize, outputSize);
-        this.bias = new double[outputSize];
+        weights = initializer.initialize(inputSize, outputSize);
+        bias = new double[outputSize];
+
+        gradW = new double[inputSize][outputSize];
+        gradB = new double[outputSize];
     }
 
     @Override
@@ -31,8 +36,6 @@ public class Dense implements Layer {
 
     @Override
     public double[] backward(double[] gradOutput) {
-        gradW = new double[weights.length][weights[0].length];
-        gradB = new double[bias.length];
         double[] gradInput = new double[input.length];
 
         for (int j = 0; j < bias.length; j++) {
@@ -46,14 +49,22 @@ public class Dense implements Layer {
     }
 
     @Override
-    public void update(double learningRate) {
-        for (int i = 0; i < weights.length; i++) {
-            for (int j = 0; j < weights[0].length; j++) {
-                weights[i][j] -= learningRate * gradW[i][j];
-            }
-        }
-        for (int j = 0; j < bias.length; j++) {
-            bias[j] -= learningRate * gradB[j];
-        }
+    public void update(double lr) {
+        for (int i = 0; i < weights.length; i++)
+            for (int j = 0; j < weights[0].length; j++)
+                weights[i][j] -= lr * gradW[i][j];
+
+        for (int j = 0; j < bias.length; j++)
+            bias[j] -= lr * gradB[j];
+    }
+
+    @Override
+    public void zeroGrad() {
+        for (int i = 0; i < gradW.length; i++)
+            for (int j = 0; j < gradW[0].length; j++)
+                gradW[i][j] = 0;
+
+        for (int j = 0; j < gradB.length; j++)
+            gradB[j] = 0;
     }
 }

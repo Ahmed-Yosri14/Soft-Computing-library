@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-public class Linear implements Activation {
+public class Linear extends Activation {
 
     @Override
     public double[] forward(double[] input) {

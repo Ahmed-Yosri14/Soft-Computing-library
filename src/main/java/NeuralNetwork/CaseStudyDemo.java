@@ -2,7 +2,6 @@ package NeuralNetwork;
 
 import NeuralNetwork.Core.NeuralNetwork;
 import NeuralNetwork.Layers.Dense;
-import NeuralNetwork.Layers.Layer;
 import NeuralNetwork.Activations.*;
 import NeuralNetwork.Loss.*;
 import NeuralNetwork.init.*;
@@ -54,7 +53,6 @@ public class CaseStudyDemo {
             case 2 -> new Sigmoid();
             case 3 -> new Tanh();
             case 4 -> new Linear();
-            case 5 -> new Softmax();
             default -> new ReLU();
         };
     }
@@ -105,13 +103,13 @@ public class CaseStudyDemo {
         System.out.println("Test samples: " + split.Xtest().length);
 
         // ===============================
-        // Defaults
+        // Defaults (unchanged)
         // ===============================
         int epochs = 500;
         int batchSize = 8;
         double learningRate = 0.1;
 
-        Loss lossFn = new MSE();
+        Loss lossFn = new BinaryCrossEntropy();   // fixed for binary classification
         Initializer initializer = new Xavier();
         Optimizer optimizer = new SGD(learningRate);
 
@@ -120,11 +118,12 @@ public class CaseStudyDemo {
         // ===============================
         if (mode == 2) {
 
-            epochs = readInt(scanner, "Epochs (1–5000): ", 1, 5000, 500);
-            batchSize = readInt(scanner, "Batch size (1–128): ", 1, 128, 8);
-            learningRate = readDouble(scanner, "Learning rate (0.0001–1.0): ", 0.0001, 1.0, 0.1);
+            epochs = readInt(scanner, "Epochs (1–5000): ", 1, 5000, epochs);
+            batchSize = readInt(scanner, "Batch size (1–128): ", 1, 128, batchSize);
+            learningRate = readDouble(scanner, "Learning rate (0.0001–1.0): ",
+                    0.0001, 1.0, learningRate);
 
-            // Optimizer
+            // Optimizer (SGD only)
             System.out.println("Optimizer:");
             System.out.println("1) SGD");
             readInt(scanner, "Choose: ", 1, 1, 1);
@@ -136,13 +135,6 @@ public class CaseStudyDemo {
             System.out.println("2) RandomUniform");
             int initChoice = readInt(scanner, "Choose: ", 1, 2, 1);
             initializer = (initChoice == 2) ? new RandomUniform() : new Xavier();
-
-            // Loss
-            System.out.println("Loss function:");
-            System.out.println("1) MSE");
-            System.out.println("2) CrossEntropy");
-            int lossChoice = readInt(scanner, "Choose: ", 1, 2, 1);
-            lossFn = (lossChoice == 2) ? new CrossEntropy() : new MSE();
         }
 
         // ===============================
@@ -152,7 +144,8 @@ public class CaseStudyDemo {
 
         if (mode == 2) {
 
-            int hiddenLayers = readInt(scanner, "Number of hidden layers (1–10): ", 1, 10, 2);
+            int hiddenLayers = readInt(scanner,
+                    "Number of hidden layers (1–10): ", 1, 10, 2);
             int inputSize = 6;
 
             for (int i = 0; i < hiddenLayers; i++) {
@@ -169,10 +162,9 @@ public class CaseStudyDemo {
                         2) Sigmoid
                         3) Tanh
                         4) Linear
-                        5) Softmax
                         """);
 
-                int actChoice = readInt(scanner, "Choose: ", 1, 5, 1);
+                int actChoice = readInt(scanner, "Choose: ", 1, 4, 1);
 
                 nn.addLayer(new Dense(inputSize, neurons, initializer));
                 nn.addLayer(buildActivation(actChoice));
@@ -222,7 +214,9 @@ public class CaseStudyDemo {
         System.out.println("\nSample predictions:");
         for (int i = 0; i < Math.min(5, split.Xtest().length); i++) {
             double p = nn.predict(split.Xtest()[i])[0];
-            System.out.println("Sample " + i + ": " + (p >= 0.5 ? "Abnormal" : "Normal"));
+            System.out.println(
+                    "Sample " + i + ": " + (p >= 0.5 ? "Abnormal" : "Normal")
+            );
         }
 
         scanner.close();

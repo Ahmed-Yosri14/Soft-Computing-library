@@ -16,6 +16,7 @@ public class CaseStudyDemo {
     // ===============================
     // Input validation helpers
     // ===============================
+    // Read and validate integer input within specified range
     private static int readInt(Scanner sc, String msg, int min, int max, int def) {
         System.out.print(msg);
         try {
@@ -32,6 +33,7 @@ public class CaseStudyDemo {
         }
     }
 
+    // Read and validate double input within specified range
     private static double readDouble(Scanner sc, String msg, double min, double max, double def) {
         System.out.print(msg);
         try {
@@ -48,6 +50,7 @@ public class CaseStudyDemo {
         }
     }
 
+    // Create activation layer based on user choice
     private static Activation buildActivation(int choice) {
         return switch (choice) {
             case 2 -> new Sigmoid();
@@ -60,10 +63,12 @@ public class CaseStudyDemo {
     // ===============================
     // Main
     // ===============================
+    // Main entry point for neural network case study demo
     public static void main(String[] args) throws Exception {
 
         Scanner scanner = new Scanner(System.in);
 
+        // Display menu options
         System.out.println("=== Neural Network Case Study ===");
         System.out.println("1) Run default Vertebral Column classification");
         System.out.println("2) Fully customize neural network");
@@ -72,30 +77,38 @@ public class CaseStudyDemo {
         // ===============================
         // Load dataset
         // ===============================
+        // Load vertebral column dataset from CSV file
         List<String[]> rawData = DataLoader.loadCSV("column_2C.csv");
 
+        // Parse CSV data into feature matrix X and label vector y
         int samples = rawData.size() - 1;
-        double[][] X = new double[samples][6];
-        double[][] y = new double[samples][1];
+        double[][] X = new double[samples][6];  // 6 features per sample
+        double[][] y = new double[samples][1];  // Binary classification label
 
+        // Convert string data to numerical arrays
         for (int i = 0; i < samples; i++) {
             String[] row = rawData.get(i + 1);
+            // Parse feature values
             for (int j = 0; j < 6; j++) {
                 try {
                     X[i][j] = Double.parseDouble(row[j]);
                 } catch (Exception e) {
-                    X[i][j] = 0.0; // graceful fallback
+                    X[i][j] = 0.0; // Graceful fallback for invalid data
                 }
             }
+            // Convert label: Abnormal=1, Normal=0
             y[i][0] = row[6].equalsIgnoreCase("Abnormal") ? 1.0 : 0.0;
         }
 
         // ===============================
         // Split then normalize
         // ===============================
+        // Split data into 80% train, 20% test
         SplitResult split = DataSplit.split(X, y, 0.8);
 
+        // Compute normalization statistics from training data only
         var stats = NormalizationUtils.fitMinMax(split.Xtrain());
+        // Apply normalization to both train and test sets
         NormalizationUtils.transformMinMax(split.Xtrain(), stats);
         NormalizationUtils.transformMinMax(split.Xtest(), stats);
 
@@ -105,31 +118,35 @@ public class CaseStudyDemo {
         // ===============================
         // Defaults (unchanged)
         // ===============================
+        // Default hyperparameters
         int epochs = 500;
-        int batchSize = 8;
-        double learningRate = 0.1;
+        int batchSize = 16;
+        double learningRate = 0.01;
 
-        Loss lossFn = new BinaryCrossEntropy();   // fixed for binary classification
+        // Default components for binary classification
+        Loss lossFn = new BinaryCrossEntropy();
         Initializer initializer = new Xavier();
         Optimizer optimizer = new SGD(learningRate);
 
         // ===============================
         // Customization
         // ===============================
+        // Allow user to customize hyperparameters and architecture
         if (mode == 2) {
 
+            // Get training hyperparameters
             epochs = readInt(scanner, "Epochs (1–5000): ", 1, 5000, epochs);
             batchSize = readInt(scanner, "Batch size (1–128): ", 1, 128, batchSize);
             learningRate = readDouble(scanner, "Learning rate (0.0001–1.0): ",
                     0.0001, 1.0, learningRate);
 
-            // Optimizer (SGD only)
+            // Select optimizer (currently only SGD available)
             System.out.println("Optimizer:");
             System.out.println("1) SGD");
             readInt(scanner, "Choose: ", 1, 1, 1);
             optimizer = new SGD(learningRate);
 
-            // Initializer
+            // Select weight initialization method
             System.out.println("Initializer:");
             System.out.println("1) Xavier");
             System.out.println("2) RandomUniform");
@@ -143,11 +160,13 @@ public class CaseStudyDemo {
         NeuralNetwork nn = new NeuralNetwork();
 
         if (mode == 2) {
+            // Custom architecture: user defines layers
 
             int hiddenLayers = readInt(scanner,
                     "Number of hidden layers (1–10): ", 1, 10, 2);
             int inputSize = 6;
 
+            // Build each hidden layer
             for (int i = 0; i < hiddenLayers; i++) {
 
                 int neurons = readInt(
@@ -156,6 +175,7 @@ public class CaseStudyDemo {
                         1, 256, 8
                 );
 
+                // Select activation function for this layer
                 System.out.println("""
                         Activation:
                         1) ReLU
@@ -166,18 +186,19 @@ public class CaseStudyDemo {
 
                 int actChoice = readInt(scanner, "Choose: ", 1, 4, 1);
 
+                // Add dense layer followed by activation
                 nn.addLayer(new Dense(inputSize, neurons, initializer));
                 nn.addLayer(buildActivation(actChoice));
 
                 inputSize = neurons;
             }
 
-            // Output layer (binary classification)
+            // Add output layer for binary classification
             nn.addLayer(new Dense(inputSize, 1, initializer));
             nn.addLayer(new Sigmoid());
 
         } else {
-            // ===== Default architecture =====
+            // Default architecture: 6 -> 12 -> 6 -> 1
             nn.addLayer(new Dense(6, 12, new Xavier()));
             nn.addLayer(new ReLU());
 

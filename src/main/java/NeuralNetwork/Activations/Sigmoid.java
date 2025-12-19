@@ -1,8 +1,11 @@
 package NeuralNetwork.Activations;
 
+// Sigmoid activation: f(x) = 1 / (1 + e^(-x))
 public class Sigmoid extends Activation {
+    // Cached output from forward pass for use in backward pass
     private double[] output;
 
+    // Apply sigmoid function to squash values between 0 and 1
     @Override
     public double[] forward(double[] input) {
         output = new double[input.length];
@@ -12,6 +15,7 @@ public class Sigmoid extends Activation {
         return output;
     }
 
+    // Gradient: f'(x) = f(x) * (1 - f(x))
     @Override
     public double[] backward(double[] gradOutput) {
         double[] gradInput = new double[gradOutput.length];

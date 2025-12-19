@@ -1,8 +1,11 @@
 package NeuralNetwork.Activations;
 
+// Tanh (Hyperbolic Tangent) activation: f(x) = tanh(x)
 public class Tanh extends Activation {
+    // Cached output from forward pass for use in backward pass
     private double[] output;
 
+    // Apply tanh function to squash values between -1 and 1
     @Override
     public double[] forward(double[] input) {
         output = new double[input.length];
@@ -12,6 +15,7 @@ public class Tanh extends Activation {
         return output;
     }
 
+    // Gradient: f'(x) = 1 - f(x)^2
     @Override
     public double[] backward(double[] gradOutput) {
         double[] gradInput = new double[gradOutput.length];

@@ -1,8 +1,11 @@
 package NeuralNetwork.Activations;
 
+// ReLU (Rectified Linear Unit) activation: f(x) = max(0, x)
 public class ReLU extends Activation {
+    // Mask to remember which elements were positive during forward pass
     private boolean[] mask;
 
+    // Apply ReLU: output 0 for negative values, input for positive values
     @Override
     public double[] forward(double[] input) {
         mask = new boolean[input.length];
@@ -14,6 +17,7 @@ public class ReLU extends Activation {
         return output;
     }
 
+    // Gradient is 1 for positive inputs, 0 for negative inputs
     @Override
     public double[] backward(double[] gradOutput) {
         double[] gradInput = new double[gradOutput.length];

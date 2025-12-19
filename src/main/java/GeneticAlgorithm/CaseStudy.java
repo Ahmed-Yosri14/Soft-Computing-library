@@ -23,7 +23,7 @@ import java.util.Random;
  * Using Genetic Algorithm to find the optimal delivery sequence that maximizes
  * the number of orders delivered within the time constraint.
  */
-public class CaseStudyDemo {
+public class CaseStudy {
     
     public static void main(String[] args) {
         System.out.println("================================================================");

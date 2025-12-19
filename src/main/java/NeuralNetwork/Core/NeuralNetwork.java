@@ -18,12 +18,10 @@ public class NeuralNetwork {
     // History of loss values for each epoch
     private List<Double> lossHistory = new ArrayList<>();
 
-    // Add a layer to the network
     public void addLayer(Layer layer) {
         layers.add(layer);
     }
 
-    // Set the optimizer for training
     public void setOptimizer(Optimizer optimizer) {
         this.optimizer = optimizer;
     }
@@ -100,7 +98,6 @@ public class NeuralNetwork {
         return Metric.accuracy(y, predict(X));
     }
 
-    // Get the history of loss values
     public List<Double> getLossHistory() {
         return lossHistory;
     }

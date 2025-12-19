@@ -1,6 +1,5 @@
 package NeuralNetwork.Loss;
 
-// Binary Cross-Entropy loss for binary classification
 public class BinaryCrossEntropy implements Loss {
 
     // Compute BCE loss: L = -y*log(p) - (1-y)*log(1-p)

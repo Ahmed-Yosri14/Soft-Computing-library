@@ -2,7 +2,7 @@ package NeuralNetwork.init;
 
 import java.util.Random;
 
-// Xavier/Glorot initialization for better gradient flow
+// Xavier initialization for better gradient flow
 public class Xavier implements Initializer {
     private Random random = new Random();
 

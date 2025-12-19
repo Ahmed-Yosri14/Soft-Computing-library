@@ -1,6 +1,6 @@
 package NeuralNetwork.Activations;
 
-// ReLU (Rectified Linear Unit) activation: f(x) = max(0, x)
+// ReLU activation: f(x) = max(0, x)
 public class ReLU extends Activation {
     // Mask to remember which elements were positive during forward pass
     private boolean[] mask;

@@ -3,7 +3,6 @@ package NeuralNetwork.Data;
 import java.io.*;
 import java.util.*;
 
-// Utility class for loading data from files
 public class DataLoader {
 
     // Load CSV file from resources and return as list of string arrays

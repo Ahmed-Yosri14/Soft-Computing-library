@@ -5,7 +5,7 @@ public class Sigmoid extends Activation {
     // Cached output from forward pass for use in backward pass
     private double[] output;
 
-    // Apply sigmoid function to squash values between 0 and 1
+    // Apply sigmoid function to scale values between 0 and 1
     @Override
     public double[] forward(double[] input) {
         output = new double[input.length];

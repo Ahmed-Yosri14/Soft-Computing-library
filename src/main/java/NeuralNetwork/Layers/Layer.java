@@ -1,6 +1,6 @@
 package NeuralNetwork.Layers;
 
-// Interface defining the basic operations for a neural network layer
+// Interface for the basic operations for a neural network layer
 public interface Layer {
 
     // Perform forward pass through the layer

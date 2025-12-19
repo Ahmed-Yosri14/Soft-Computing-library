@@ -1,11 +1,11 @@
 package NeuralNetwork.Activations;
 
-// Tanh (Hyperbolic Tangent) activation: f(x) = tanh(x)
+// Tanh activation: f(x) = tanh(x)
 public class Tanh extends Activation {
     // Cached output from forward pass for use in backward pass
     private double[] output;
 
-    // Apply tanh function to squash values between -1 and 1
+    // Apply tanh function to scale values between -1 and 1
     @Override
     public double[] forward(double[] input) {
         output = new double[input.length];
